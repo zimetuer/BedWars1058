@@ -5,4 +5,20 @@ author: andrei1058
 description: BedWars minigame by andrei1058
 main: com.andrei1058.bedwars.BedWars
 softdepend: [Vault,PlaceholderAPI,Citizens,Parties,SlimeWorldManager,VipFeatures,Enhanced-SlimeWorldManager,PartyAndFriends,Spigot-Party-API-PAF]
+commands:
+  saveteam:
+    description: Saves a team to storage.
+    usage: /saveteam <team_name> <storage_key>
+  getteam:
+    description: Retrieves a team from storage.
+    usage: /getteam <storage_key>
+  createteam:
+    description: Creates a team and saves it to storage
+    usage: /createteam <team_name> <storage_key>
+  addplayer:
+    description: Adds a player to a stored team.
+    usage: /addplayer <storage_key> <player_name>
+  removeplayer:
+    description: Removes a player from a stored team.
+    usage: /removeplayer <storage_key> <player_name>
 #load: STARTUP

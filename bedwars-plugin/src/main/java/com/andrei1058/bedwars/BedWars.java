@@ -20,6 +20,9 @@
 
 package com.andrei1058.bedwars;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import com.andrei1058.bedwars.api.arena.IArena;
 import com.andrei1058.bedwars.api.configuration.ConfigManager;
 import com.andrei1058.bedwars.api.configuration.ConfigPath;
@@ -79,6 +82,8 @@ import com.andrei1058.bedwars.support.preloadedparty.PrePartyListener;
 import com.andrei1058.bedwars.support.vault.*;
 import com.andrei1058.bedwars.support.vipfeatures.VipFeatures;
 import com.andrei1058.bedwars.support.vipfeatures.VipListeners;
+import com.andrei1058.bedwars.team.TeamCommandExecutor;
+import com.andrei1058.bedwars.team.TeamStorageManager;
 import com.andrei1058.vipfeatures.api.IVipFeatures;
 import com.andrei1058.vipfeatures.api.MiniGameAlreadyRegistered;
 import org.bukkit.Bukkit;
@@ -115,6 +120,8 @@ public class BedWars extends JavaPlugin {
     public static StatsManager statsManager;
     public static BedWars plugin;
     public static VersionSupport nms;
+    private TeamStorageManager teamStorageManager;
+    private TeamCommandExecutor commandExecutor;
 
     public static boolean isPaper = false;
 
@@ -211,10 +218,13 @@ public class BedWars extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        if (!serverSoftwareSupport) {
-            Bukkit.getPluginManager().disablePlugin(this);
-            return;
-        }
+        teamStorageManager = new TeamStorageManager(this);
+        commandExecutor = new TeamCommandExecutor(teamStorageManager);
+        getCommand("saveteam").setExecutor(commandExecutor);
+        getCommand("getteam").setExecutor(commandExecutor);
+        getCommand("createteam").setExecutor(commandExecutor);
+        getCommand("addplayer").setExecutor(commandExecutor);
+        getCommand("removeplayer").setExecutor(commandExecutor);
 
         nms.registerVersionListeners();
 
@@ -318,6 +328,7 @@ public class BedWars extends JavaPlugin {
         loadArenasAndSigns();
 
         statsManager = new StatsManager();
+
 
         /* Party support */
         Bukkit.getScheduler().runTaskLater(this, () -> {
@@ -585,6 +596,7 @@ public class BedWars extends JavaPlugin {
     }
 
     public void onDisable() {
+        teamStorageManager.clearStoredTeams();
         shuttingDown = true;
         if (!serverSoftwareSupport) return;
         if (getServerType() == ServerType.BUNGEE) {
@@ -769,4 +781,9 @@ public class BedWars extends JavaPlugin {
     public ChunkGenerator getDefaultWorldGenerator(String worldName, String id) {
         return new VoidChunkGenerator();
     }
+
+    public TeamStorageManager getTeamStorageManager() {
+        return teamStorageManager;
+    }
+
 }
