@@ -149,7 +149,8 @@ public class BwSidebar implements ISidebar {
                         line = genericTeamFormat
                                 .replace("{TeamLetter}", teamLetter)
                                 .replace("{TeamColor}", team.getColor().chat().toString())
-                                .replace("{TeamName}", teamName);
+                                .replace("%bwteams_teamname%", teamName);
+
 
                         if (line.contains("{TeamStatus}") && getAPI().getVersionSupport().getVersion() >= 10) {
                             line = line.replace("{TeamStatus}", "");
